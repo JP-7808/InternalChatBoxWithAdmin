@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="login-container">
+    <div class="card shadow">
+        <div class="card-header  text-white" style="background: linear-gradient(to right, #20A090,rgb(45, 178, 211),#20A090);">
+            <h4 class="mb-0">Admin Login</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+            <form asp-action="Login" method="post">
+                <div class="form-group mb-3">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div style="text-align: center;">
+                <button type="submit" class="btn  fw-bolder text-white" style="background: linear-gradient(to right, #20A090,rgb(45, 178, 211),#20A090); ">Login</button>
+<br>
+                    @* <a href="/Admin/ForgotPassword" class="text-decoration-none">Forgot Password?</a> *@
+                  
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+    }
+</style>

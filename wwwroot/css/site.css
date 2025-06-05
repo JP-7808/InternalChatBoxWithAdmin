@@ -1,0 +1,68 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+a {
+  text-decoration: none !important;
+  font-weight: 500;
+  color: black;
+}
+a:hover {
+  text-decoration: none !important;
+  color: #20A090;
+}
+
+.contact-page{
+  height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* space between image and name */
+  margin-bottom: 20px; /* space between contact items */
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .insert-button {
+    background-color: #20A090;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 12px ;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    right: 40px !important;
+}
+}

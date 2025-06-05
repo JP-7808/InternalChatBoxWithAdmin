@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentPath = Context.Request.Path.ToString().ToLower();
+    var currentUserId = ViewBag.CurrentUserId;
+    var currentUserName = ViewBag.UserName;
+    var currentUserRole = ViewBag.UserRole;
+    var currentUserStatus = ViewBag.UserStatus;
+    var userAvatarUrl = ViewBag.UserAvatarUrl;
+}
+
+<div class="settings-container d-flex flex-column align-items-center"
+     style="background-color:#6dcda9; width:100vw; min-height:100vh;">
+
+    <!-- Optional heading with a back arrow -->
+    <div class="d-flex align-items-center w-100 position-relative" style="margin-top: 2rem;">
+        <a href="/Chat/Index" class="text-decoration-none text-dark d-flex align-items-center pe-3 position-absolute" style="margin-left: 2rem;">
+            <i class="bi bi-arrow-left fs-4"></i> <!-- Back Arrow Icon -->
+        </a>
+        <h1 class="w-100 text-center">Settings</h1>
+    </div>
+
+    <!-- Main inner container -->
+    <div class="settings-inner d-flex flex-column px-2 px-md-4 shadow"
+         style="height: 85vh; background: #fff; padding: 2rem 4rem; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-top: auto;">
+
+        <!-- User Info -->
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-start mb-4 px-0 px-md-4 text-center text-md-center text-md-start" style="gap: 2rem;">
+            <div class="d-flex justify-content-center align-items-center rounded-circle border" style="width: 6rem; height: 6rem; overflow: hidden;">
+                <img src="@(userAvatarUrl ?? "~/image/Ellipse 318.png")" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/image/Ellipse 318.png'" />
+            </div>
+            <div class="user-info d-flex flex-column justify-content-center text-center text-md-start">
+                <!-- Add id="userName" to the h3 element for targeting in JS -->
+                <h3 id="userName" class="mb-1" style="font-size: 1.25rem;">@ViewBag.UserName</h3>
+                <p class="mb-0 text-muted">@ViewBag.UserRole</p>
+            </div>
+        </div>
+
+        <!-- Settings List -->
+        <ul class="list-group">
+            <li class="list-group-item border-0 d-flex justify-content-between align-items-center mt-3 fs-5">
+                <a href="/Account/Profile" class="text-decoration-none text-dark">
+                    <i class="bi bi-pencil pe-4"></i> Edit Profile
+                </a>
+            </li>
+           <li class="list-group-item border-0 d-flex justify-content-between align-items-center mt-3 fs-5">
+                <a href="/Chat/Index" class="text-decoration-none text-dark">
+                    <i class="bi bi-chat pe-4"></i> Chat
+                </a>
+            </li>
+
+            <!--Help Function-->
+            <a asp-action="Help" asp-controller="Account" class="text-decoration-none text-dark">
+                <li class="list-group-item border-0 d-flex justify-content-between align-items-center mt-3 fs-5">
+                    <span><i class="bi bi-question-circle pe-4"></i> Help</span>
+                </li>
+            </a>
+
+
+            <li class="list-group-item border-0 d-flex justify-content-between align-items-center mt-3 fs-5">
+                <a href="/Account/Logout" class="text-decoration-none text-dark">
+                    <i class="bi bi-box-arrow-right pe-4"></i> Logout
+                </a>
+            </li>
+        </ul>
+
+        <!-- Bottom Navigation inside the inner container -->
+        <div class="d-flex justify-content-around align-items-center border-top bg-white w-100 mt-auto pt-3" style="height: 60px;">
+            <a href="/Chat/Index" class="text-center text-decoration-none @(currentPath.Contains("/message") ? "text-success" : "text-secondary")">
+                <i class="bi bi-chat-dots fs-5"></i><br />
+                <small>Message</small>
+            </a>
+            <a href="/Contacts/Index" class="text-center text-decoration-none @(currentPath.Contains("/contacts") ? "text-success" : "text-secondary")">
+                <i class="bi bi-people fs-5"></i><br />
+                <small>Contacts</small>
+            </a>
+            <a href="/Settings/settings" class="text-center text-decoration-none @(currentPath.Contains("/setting") ? "text-success" : "text-secondary")">
+                <i class="bi bi-gear fs-5"></i><br />
+                <small>Settings</small>
+            </a>
+        </div>
+    </div> <!-- /.settings-inner -->
+</div> <!-- /.settings-container -->
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+
+<script>
+    // Capitalize the first letter of the UserName using JavaScript
+    window.onload = function () {
+        var userNameElement = document.getElementById("userName");
+        if (userNameElement) {
+            var userName = userNameElement.innerText;
+            // Capitalize the first letter and leave the rest as is
+            var capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            userNameElement.innerText = capitalizedUserName;
+        }
+    };
+</script>

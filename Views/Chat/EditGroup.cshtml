@@ -1,0 +1,166 @@
+﻿@model InternalChatbox.Models.ChatGroup
+@{
+    ViewData["Title"] = "Edit Group";
+    var nonMembers = ViewBag.NonMembers as List<InternalChatbox.Models.User>;
+    var currentUserId = ViewBag.CurrentUserId;
+}
+
+<div class="container mt-2">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-success text-white rounded-top-4">
+            <h3 class="mb-0"><span class='text-dark'>Edit Group:</span> @Model.GroupName</h3>
+        </div>
+        <div class="card-body p-4">
+            <form id="editGroupForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="groupId" value="@Model.Id" />
+
+                <div class="mb-4">
+                    <label for="groupName" class="form-label fw-semibold">Group Name</label>
+                    <input type="text" class="form-control form-control-lg" id="groupName" name="groupName" value="@Model.GroupName" required />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Current Group Image</label>
+                    <div>
+                        @if (!string.IsNullOrEmpty(Model.GroupImagePath))
+                        {
+                            <img src="@Model.GroupImagePath" alt="Group Image" class="rounded-circle mb-2" style="width: 100px; height: 100px;" onerror="this.src='/lib/icons/user.jpg.png'" />
+                        }
+                        else
+                        {
+                            <img src="/lib/icons/user.jpg.png" alt="Default Image" class="rounded-circle mb-2" style="width: 100px; height: 100px;" />
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="groupImage" class="form-label fw-semibold">Update Group Image (optional)</label>
+                    <input type="file" class="form-control form-control-lg" id="groupImage" name="GroupImage" accept="image/*" />
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3">Current Members</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var member in Model.Members)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@member.User.Name</strong> <span class="text-muted">(@member.User.Designation)</span>
+                                    @if (member.IsAdmin)
+                                    {
+                                        <span class="badge bg-success ms-2">Admin</span>
+                                    }
+                                </div>
+                                @if (member.UserId != currentUserId)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-member" data-userid="@member.UserId" data-groupid="@Model.Id">
+                                        <i class="bi bi-x-circle"></i> Remove
+                                    </button>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3">Add New Members</h5>
+                    <div class="row">
+                        @foreach (var user in nonMembers)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input new-member-checkbox" type="checkbox" value="@user.Id" id="user_@user.Id" />
+                                    <label class="form-check-label" for="user_@user.Id">
+                                        @user.Name (@user.Designation)
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle-fill"></i> Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-x-circle-fill"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#editGroupForm').submit(function (e) {
+                e.preventDefault();
+
+                const groupId = $('input[name="groupId"]').val();
+                const groupName = $('#groupName').val();
+                const newMembers = [];
+                const groupImage = $('#groupImage')[0].files[0]; // Get the uploaded file
+
+                $('.new-member-checkbox:checked').each(function () {
+                    newMembers.push($(this).val());
+                });
+
+                const formData = new FormData();
+                formData.append('groupId', groupId);
+                formData.append('groupName', groupName);
+                newMembers.forEach(memberId => {
+                    formData.append('newMembers', memberId);
+                });
+                if (groupImage) {
+                    formData.append('GroupImage', groupImage); // Add the image file to FormData
+                }
+
+                fetch('/Chat/UpdateGroup', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/Chat/Index';
+                        } else {
+                            response.text().then(text => {
+                                alert('Error updating group: ' + text);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error updating group');
+                    });
+            });
+
+            $('.remove-member').click(function () {
+                const userId = $(this).data('userid');
+                const groupId = $(this).data('groupid');
+
+                if (confirm('Are you sure you want to remove this member?')) {
+                    fetch('/Chat/RemoveGroupMember', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId, groupId })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                location.reload();
+                            } else {
+                                alert('Error removing member');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error removing member');
+                        });
+                }
+            });
+        });
+    </script>
+}

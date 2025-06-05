@@ -1,0 +1,69 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Create New User</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateUser" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EmployeeId"></label>
+                            <input asp-for="EmployeeId" class="form-control" />
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Designation"></label>
+                            <input asp-for="Designation" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Location"></label>
+                            <input asp-for="Location" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Role"></label>
+                            <select asp-for="Role" class="form-control">
+                                <option value="Employee">Employee</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Profile Image</label>
+                            <input type="file" name="profileImage" class="form-control" accept=".jpg,.jpeg,.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <a href="@Url.Action("Users")" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

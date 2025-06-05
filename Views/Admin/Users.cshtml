@@ -1,0 +1,83 @@
+﻿@model List<User>
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Manage Users</h1>
+        <a href="@Url.Action("CreateUser")" class="btn  btn-icon-split" style="background: linear-gradient(to right, #20A090,rgb(23, 181, 141));">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span class="text text-white fw-bolder">Create New User</span>
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">All Users</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Employee ID</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(user.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" style="width:50px;height:50px;">
+                                </td>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>@user.EmployeeId</td>
+                                <td>
+                                    <span class="badge @(user.Role == "Admin" ? "bg-danger" : "bg-primary")">
+                                        @user.Role
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge @(user.Status == "Online" ? "bg-success" : "bg-secondary")">
+                                        @user.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("EditUser", new { id = user.Id })" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="DeleteUser" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Are you sure you want to delete this user?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+        });
+    </script>
+}

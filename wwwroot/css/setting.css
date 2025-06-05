@@ -1,0 +1,310 @@
+html {
+    font-size: 14px;
+  }
+  
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  
+  .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  }
+  
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  /* In your site.css or custom CSS file */
+  .settings-inner {
+      width: 100%; /* Default to 100% on mobile devices */
+  }
+  
+  .container-fluid {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      width: 100vw;
+      background-color: #f8f9fa;
+      padding: 0;
+  }
+  
+  .user-profile-card{
+    width: 100%;
+  }
+  
+  .outer-container{
+    width: 100vw !important;
+  }
+  
+  .inner-container{
+    width: 80% !important;
+  }
+  
+  .btn:focus {
+          outline: none !important;
+          box-shadow: none !important;
+          border: none !important;
+  }
+  
+  /* Ensure the parent container has relative positioning */
+  .inner-container {
+      width: 85% !important; /* Ensure it is the right width */
+      height: calc(100vh - 4rem) !important; /* Make sure it doesn't scroll by limiting the height */
+      overflow: hidden; /* Disable scrolling */
+      position: relative;/* Adjust if necessary */
+  }
+  
+  
+  /* Position the pencil button on the side of the profile circle */
+  #editToggle {
+      position: absolute;
+      left: calc(100% - 60px); /* Adjust this based on your layout */
+      top: 50%; /* Vertically center the button */
+      transform: translateY(-50%); /* To ensure the button is perfectly centered */
+      color: black !important;
+      border: 1px solid black !important;
+  }
+  
+  
+  /* For medium screens and above (tablet and larger) */
+  @media (min-width: 768px) {
+      .settings-inner {
+          width: 80%; /* 80% width on tablets or larger */
+      }
+      .user-profile-card {
+          width: 80%; /* 80% width on tablets or larger */
+      }
+  
+  }
+
+   @media (max-width: 219px){
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 8rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+  
+
+  @media (min-width: 220px) and (max-width: 320px){
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 11rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+  @media (min-width: 321px) and (max-width: 376px) {
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 14rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+
+  @media (min-width: 376px) and (max-width: 426px) {
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 16rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+
+  @media (min-width: 426px) and (max-width: 500px) {
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 17rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+
+  
+  @media (min-width: 500px) and (max-width: 576px) {
+     
+  .inner-container{
+    width: 100% !important;
+  }
+   #editToggle {
+        position: absolute !important;
+        left: 20rem !important;
+        top: -6rem;
+      }
+      .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      }
+
+       #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      }
+  
+  }
+
+  @media (min-width: 576px) and (max-width: 769px) {
+     
+  .inner-container{
+    width: 80% !important;
+  }
+
+  .profile-details{
+    justify-content: center !important;
+    align-items: left !important;
+    margin-left: 2rem !important;
+  }
+
+   #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: none;
+      }
+  }
+  
+  
+  @media (max-width: 768px) {
+    .user-info {
+      align-items: center;
+    }
+ 
+  
+     .profile-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 10px !important;
+   }
+  
+      .image{
+        margin: 0px !important;
+      }
+  
+      /* .profile-details{
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 12px 0;
+      } */
+  
+      /* #button-container{
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-evenly;
+      } */
+  
+     
+  
+      .input-values{
+        padding-left: 20px;
+      }
+  
+      .form-container{
+        padding: 5px 1rem !important;
+        overflow-y: auto !important;
+      }
+  }

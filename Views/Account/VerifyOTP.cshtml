@@ -1,0 +1,111 @@
+@{
+    ViewData["Title"] = "Verify OTP";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header text-center  text-white" style="background-color: #20A090;">
+                    <h4>OTP Verification</h4>
+                </div>
+                <div class="card-body">
+
+                    <!-- Show message that OTP has been sent -->
+                    <div class="alert alert-info text-center">
+                        An OTP has been sent to your registered email address. Please enter it below.
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
+
+                    <form method="post" asp-action="VerifyOTP" asp-controller="Account">
+                        <div class="form-group d-flex justify-content-center gap-2 mb-3">
+                            @for (int i = 0; i < 6; i++)
+                            {
+                                <input type="text" class="form-control text-center otp-box" id="otp-@i" maxlength="1" pattern="[0-9]" required 
+                                       style="width: 50px; height: 50px; font-size: 24px;" 
+                                       @(i == 0 ? "autofocus" : "") />
+                            }
+                        </div>
+                        <input type="hidden" id="EnteredOTP" name="EnteredOTP" />
+                        <button type="submit" class="btn btn-primary mt-3 w-100">Verify OTP</button>
+                    </form>
+
+                    <!-- Resend OTP section -->
+                    <div class="mt-3 text-center">
+                        <button id="resendButton" class="btn btn-link" disabled onclick="resendOtp()">Resend OTP</button>
+                        <div id="countdown" class="text-muted small"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const otpInputs = document.querySelectorAll('.otp-box');
+        const otpHiddenInput = document.getElementById('EnteredOTP');
+
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length > 0 && !/^[0-9]$/.test(e.target.value)) {
+                    e.target.value = '';
+                    return;
+                }
+                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                updateOtpValue();
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('paste', (e) => {
+                const pasteData = e.clipboardData.getData('text').trim();
+                if (/^\\d{6}$/.test(pasteData)) {
+                    for (let i = 0; i < 6; i++) {
+                        otpInputs[i].value = pasteData[i];
+                    }
+                    updateOtpValue();
+                    otpInputs[5].focus();
+                    e.preventDefault();
+                }
+            });
+        });
+
+        function updateOtpValue() {
+            const otpValue = Array.from(otpInputs).map(input => input.value).join('');
+            otpHiddenInput.value = otpValue;
+        }
+
+        // Countdown and resend OTP button logic
+        let timer = 30;
+        const resendButton = document.getElementById('resendButton');
+        const countdown = document.getElementById('countdown');
+
+        const countdownInterval = setInterval(() => {
+            if (timer > 0) {
+                timer--;
+                countdown.textContent = `You can resend OTP in ${timer} seconds.`;
+            } else {
+                resendButton.disabled = false;
+                countdown.textContent = '';
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+
+        function resendOtp() {
+            // Hit a URL to resend OTP (you can create a controller action for this)
+            window.location.href = '/Account/ResendOTP';
+        }
+    </script>
+}

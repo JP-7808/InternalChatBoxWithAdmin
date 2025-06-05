@@ -1,0 +1,195 @@
+@{
+    ViewData["Title"] = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentPath = Context.Request.Path.ToString().ToLower();
+
+    var users = ViewBag.Users as List<InternalChatbox.Models.User>;
+    var groups = ViewBag.Groups as List<InternalChatbox.Models.ChatGroup>;
+}
+
+<style>
+    .contacts-container {
+        background: linear-gradient(135deg, #6dcda9, #4bb897);
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .contacts-inner {
+        background: #fff;
+        width: 100%;
+        max-width: 80%;
+        height: 85vh;
+        border-radius: 25px 25px 0 0;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .contacts-header {
+        padding: 1.5rem;
+        position: relative;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        width: 100%;
+    }
+    
+    .back-arrow {
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #333;
+        transition: all 0.2s ease;
+    }
+    
+    .back-arrow:hover {
+        color: #4bb897;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .contacts-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 1rem;
+    }
+    
+    .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        margin: 0.5rem 0;
+    }
+    
+    .contact-item:hover {
+        background-color: #f5f5f5;
+        transform: translateX(5px);
+    }
+    
+    .contact-avatar {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 1rem;
+        border: 2px solid #e0e0e0;
+    }
+    
+    .contact-name {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .contact-status {
+        font-size: 0.8rem;
+        color: #4bb897;
+    }
+    
+    .nav-tab {
+        color: #888;
+        text-decoration: none;
+        padding: 0.5rem;
+        transition: all 0.2s ease;
+        flex: 1;
+        text-align: center;
+    }
+    
+    .nav-tab.active {
+        color: #4bb897;
+    }
+    
+    .nav-tab i {
+        font-size: 1.4rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .nav-tab small {
+        font-size: 0.7rem;
+        display: block;
+    }
+    
+    .bottom-nav {
+        background: #fff;
+        border-top: 1px solid #eee;
+        display: flex;
+        padding: 0.5rem 0;
+    }
+</style>
+
+<div class="contacts-container">
+    <!-- Header with back arrow -->
+    <div class="contacts-header text-center">
+        <a href="/Chat/Index" class="back-arrow text-decoration-none">
+            <i class="bi bi-arrow-left fs-4"></i>
+        </a>
+        <h2 class="m-0">Your Contacts</h2>
+    </div>
+
+    <div class="contacts-inner">
+        
+        <!-- Search bar -->
+        <div style="padding: 1rem; display: flex;">
+                        <span class="input-group-text"><i class="fas fa-search" style="color: #20A090;"></i></span>
+
+            <input type="text" id="contactSearch" class="form-control border-2 border-info rounded-bottom-4" placeholder="Search contacts..." />
+        </div>
+
+        
+
+        <!-- Contact list -->
+        <div class="contacts-list" id="contactsList">
+            @foreach (var user in users)
+            {
+                <div class="contact-item">
+                    <img src="@(user.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" />
+                    <div>
+                        <div class="contact-name">@user.Name</div>
+                        @* <div class="contact-status">Online</div> *@
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="/Chat/Index" class="nav-tab @(currentPath.Contains("/message") ? "active" : "")">
+                <i class="bi bi-chat-dots"></i>
+                <small>Message</small>
+            </a>
+            <a href="/Contacts" class="nav-tab @(currentPath.Contains("/contacts") ? "active" : "")">
+                <i class="bi bi-people"></i>
+                <small>Contacts</small>
+            </a>
+            <a href="/Settings/settings" class="nav-tab @(currentPath.Contains("/setting") ? "active" : "")">
+                <i class="bi bi-gear"></i>
+                <small>Settings</small>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+
+<!-- Search Script -->
+<script>
+    document.getElementById('contactSearch').addEventListener('input', function () {
+        var searchValue = this.value.toLowerCase();
+        var contacts = document.querySelectorAll('.contact-item');
+
+        contacts.forEach(function (contact) {
+            var name = contact.querySelector('.contact-name').textContent.toLowerCase();
+            if (name.includes(searchValue)) {
+                contact.style.display = 'flex';
+            } else {
+                contact.style.display = 'none';
+            }
+        });
+    });
+</script>

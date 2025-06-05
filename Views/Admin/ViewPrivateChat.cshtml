@@ -1,0 +1,69 @@
+﻿@model List<ChatMessage>
+@{
+    ViewData["Title"] = "Private Chat";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Private Chat</h1>
+        <a href="@Url.Action("PrivateChats")" class="btn btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Back to All Chats</span>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Conversation between
+                        <img src="@(ViewBag.User1.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" style="width:30px;height:30px;">
+                        @ViewBag.User1.Name and
+                        <img src="@(ViewBag.User2.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" style="width:30px;height:30px;">
+                        @ViewBag.User2.Name
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chat-container" style="max-height: 500px; overflow-y: auto;">
+                        @foreach (var message in Model)
+                        {
+                            <div class="message @(message.SenderId == ViewBag.User1.Id ? "text-left" : "text-right") mb-3">
+                                <div class="d-flex @(message.SenderId == ViewBag.User1.Id ? "" : "justify-content-end")">
+                                    @if (message.SenderId == ViewBag.User1.Id)
+                                    {
+                                        <img src="@(message.Sender.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" class="rounded-circle mr-2" width="40" height="40">
+                                    }
+                                    <div>
+                                        <div class="font-weight-bold">@message.Sender.Name</div>
+                                        <div class="message-bubble @(message.SenderId == ViewBag.User1.Id ? "bg-light" : "bg-primary text-white") p-3 rounded">
+                                            @Html.Raw(message.MessageText)
+                                        </div>
+                                        <small class="text-muted">@TimeZoneInfo.ConvertTimeFromUtc(message.SentAt, TimeZoneInfo.Local).ToString("hh:mm:ss tt")</small>
+                                    </div>
+                                    @if (message.SenderId == ViewBag.User2.Id)
+                                    {
+                                        <img src="@(message.Sender.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" class="rounded-circle ml-2" width="40" height="40">
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .message-bubble {
+            max-width: 70%;
+            display: inline-block;
+            word-wrap: break-word;
+        }
+    </style>
+}

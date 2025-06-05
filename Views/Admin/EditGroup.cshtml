@@ -1,0 +1,186 @@
+﻿@model ChatGroup
+@{
+    ViewData["Title"] = "Edit Group";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Edit Group</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Group Details</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditGroup" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <div class="form-group">
+                    <label asp-for="GroupName"></label>
+                    <input asp-for="GroupName" class="form-control" required />
+                    <span asp-validation-for="GroupName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Group Image</label>
+                    <input type="file" name="groupImage" class="form-control" accept=".jpg,.jpeg,.png" />
+                    @if (!string.IsNullOrEmpty(Model.GroupImagePath))
+                    {
+                        <div class="mt-2">
+                            <img src="@Model.GroupImagePath" class="img-thumbnail" style="width:100px;height:100px;">
+                            <div class="form-check mt-2">
+                                <input type="checkbox" class="form-check-input" name="removeImage" id="removeImage">
+                                <label class="form-check-label" for="removeImage">Remove Current Image</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>Current Members</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="currentMembersTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.Members)
+                                {
+                                    <tr data-user-id="@member.UserId">
+                                        <td>@member.User.Name</td>
+                                        <td>@member.User.Email</td>
+                                        <td>
+                                            @if (member.IsAdmin)
+                                            {
+                                                <span class="badge badge-success">Admin</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">Member</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!member.IsAdmin)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-info make-admin-btn"
+                                                        data-group-id="@Model.Id" data-user-id="@member.UserId">
+                                                    Make Admin
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-sm btn-warning remove-admin-btn"
+                                                        data-group-id="@Model.Id" data-user-id="@member.UserId">
+                                                    Remove Admin
+                                                </button>
+                                            }
+                                            <button type="button" class="btn btn-sm btn-danger remove-member-btn"
+                                                    data-group-id="@Model.Id" data-user-id="@member.UserId">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Add New Members</label>
+                    <select name="newMemberIds" class="form-control select2" multiple="multiple">
+                        @foreach (var user in ViewBag.AllUsers)
+                        {
+                            if (!Model.Members.Any(m => m.UserId == user.Id))
+                            {
+                                <option value="@user.Id">@user.Name (@user.Email)</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Update Group</button>
+                    <a href="@Url.Action("Groups")" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select members to add",
+                allowClear: true
+            });
+
+            // Handle make admin button click
+            $('.make-admin-btn').click(function() {
+                var groupId = $(this).data('group-id');
+                var userId = $(this).data('user-id');
+                var btn = $(this);
+
+                $.post('/Admin/ToggleGroupAdmin', { groupId: groupId, userId: userId })
+                    .done(function() {
+                        btn.replaceWith('<button type="button" class="btn btn-sm btn-warning remove-admin-btn" ' +
+                            'data-group-id="' + groupId + '" data-user-id="' + userId + '">Remove Admin</button>');
+                        btn.closest('tr').find('td:nth-child(3)').html('<span class="badge badge-success">Admin</span>');
+                    })
+                    .fail(function() {
+                        alert('Failed to update admin status');
+                    });
+            });
+
+            // Handle remove admin button click
+            $('.remove-admin-btn').click(function() {
+                var groupId = $(this).data('group-id');
+                var userId = $(this).data('user-id');
+                var btn = $(this);
+
+                $.post('/Admin/ToggleGroupAdmin', { groupId: groupId, userId: userId })
+                    .done(function() {
+                        btn.replaceWith('<button type="button" class="btn btn-sm btn-info make-admin-btn" ' +
+                            'data-group-id="' + groupId + '" data-user-id="' + userId + '">Make Admin</button>');
+                        btn.closest('tr').find('td:nth-child(3)').html('<span class="badge badge-secondary">Member</span>');
+                    })
+                    .fail(function() {
+                        alert('Failed to update admin status');
+                    });
+            });
+
+            // Handle remove member button click
+            $('.remove-member-btn').click(function() {
+                if (!confirm('Are you sure you want to remove this member from the group?')) {
+                    return;
+                }
+
+                var groupId = $(this).data('group-id');
+                var userId = $(this).data('user-id');
+                var row = $(this).closest('tr');
+
+                $.post('/Admin/RemoveGroupMember', { groupId: groupId, userId: userId })
+                    .done(function() {
+                        row.remove();
+                        // Add the user back to the select2 dropdown
+                        var select = $('select[name="newMemberIds"]');
+                        var option = new Option(row.find('td:first').text() + ' (' + row.find('td:nth-child(2)').text() + ')', userId, false, false);
+                        select.append(option).trigger('change');
+                    })
+                    .fail(function() {
+                        alert('Failed to remove member');
+                    });
+            });
+        });
+    </script>
+}

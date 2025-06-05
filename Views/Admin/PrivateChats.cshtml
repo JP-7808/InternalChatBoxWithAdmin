@@ -1,0 +1,85 @@
+﻿@model List<ChatMessage>
+@{
+    ViewData["Title"] = "Private Chats";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Private Chats</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Private Messages</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Message</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var message in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(message.Sender.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" style="width:30px;height:30px;">
+                                    @message.Sender.Name
+                                </td>
+                                <td>
+                                    <img src="@(message.Receiver.ProfileImagePath ?? "/lib/icons/user.jpg.png")" class="class="avatar" onerror="this.src='/lib/icons/user.jpg.png'" style="width:30px;height:30px;">
+                                    @message.Receiver.Name
+                                </td>
+                                <td>@Html.Raw(message.MessageText)</td>
+                                <td data-order="@message.SentAt.Ticks">
+                                    @TimeZoneInfo.ConvertTimeFromUtc(message.SentAt, TimeZoneInfo.Local).ToString("hh:mm:ss tt")
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ViewPrivateChat", new { userId1 = message.SenderId, userId2 = message.ReceiverId })"
+                                       class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    <a href="@Url.Action("DownloadPrivateChat", new { userId1 = message.SenderId, userId2 = message.ReceiverId, format = "csv" })"
+                                       class="btn btn-sm btn-success">
+                                        <i class="fas fa-file-csv"></i> CSV
+                                    </a>
+                                    <a href="@Url.Action("DownloadPrivateChat", new { userId1 = message.SenderId, userId2 = message.ReceiverId, format = "txt" })"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-file-alt"></i> TXT
+                                    </a>
+                                    <a href="@Url.Action("DownloadPrivateChat", new { userId1 = message.SenderId, userId2 = message.ReceiverId, format = "pdf" })"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "order": [[3, "desc"]], // Sort by 4th column (Time) descending
+                "columnDefs": [
+                    {
+                        "type": "num", // Use numeric sorting for the ticks value
+                        "targets": 3
+                    }
+                ]
+            });
+        });
+    </script>
+}

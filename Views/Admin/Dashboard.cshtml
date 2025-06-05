@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Admin Dashboard</h2>
+        </div>
+    </div>
+
+    <div class="row mb-4" >
+        <div class="col-xl-3 col-md-6 mb-4" >
+            <div class="card border-left-primary shadow h-100 py-2" style="background: linear-gradient(to right, rgb(40, 162, 148) ,white,white);">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold fw-bolder text- text-uppercase mb-1">
+                                Total Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.Stats.TotalUsers</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2" style="background: linear-gradient(to right, #389a8e ,white,white);">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold fw-bolder text- text-uppercase mb-1">
+                                Total Groups
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.Stats.TotalGroups</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2" style="background: linear-gradient(to right, #20A090 ,white,white);">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold fw-bolder  text-uppercase mb-1">
+                                Total Messages
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.Stats.TotalMessages</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header text-white" style="background: linear-gradient(to right, #20A090,white);">
+                    Quick Actions
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Users")" class="btn btn-outline-primary">Manage Users</a>
+                        <a href="@Url.Action("Groups")" class="btn btn-outline-primary">Manage Groups</a>
+                        <a href="@Url.Action("CreateUser")" class="btn btn-outline-success">Create New User</a>
+                        <a href="@Url.Action("CreateGroup")" class="btn btn-outline-success">Create New Group</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
